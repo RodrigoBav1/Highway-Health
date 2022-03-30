@@ -35,7 +35,7 @@ r.to_html('templates/demo.html')
 
 @app.route('/')
 def home():
-   return render_template('flaskr/demo.html')
+   return render_template('demo.html')
 
 
 if __name__ == '__main__':
