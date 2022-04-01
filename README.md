@@ -6,6 +6,8 @@ Highway Health will use data from APIs supplied by the following company's APIs:
 
 ## Dependencies
 
+Have Python installed with pip or conda
+
 [Install webpack (needed to install Deck.gl)](https://github.com/webpack/webpack "Webpack Github")
 
 [Install Deck.gl (this example applies it via Leaflet)](https://github.com/visgl/deck.gl/tree/8.7-release/examples/get-started/pure-js/leaflet "Deck.gl Github")
@@ -15,6 +17,11 @@ Highway Health will use data from APIs supplied by the following company's APIs:
 Install the following dependencies: 
 1. webpack-cli@3.3.2 --save-dev
 2. #deck.gl/core #deck.gl/layers 
+
+Python packages: 
+1. geojson (maybe)
+2. requests
+3. ?
 
 Using the command (replacing _dependency_ with the listed dependencies above): 
 ```bash

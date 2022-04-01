@@ -1,0 +1,11 @@
+
+4/1/2022
+
+OpenWeatherMaps:
+Trendata suggesting using minute forecast 1 hour? Perhaps along with the current weather.
+Could be useful for safety bc the most dangerous times re: weather on the road is 20 minutes before impactful weather.
+
+Historical Data: 
+Trendata implies we should keep track of our historical data via database. This is in my WHEELHOUSE.
+
+Mayor is interested in Richardson data bc obviously he is. Might be able to get us more data to play with. 
