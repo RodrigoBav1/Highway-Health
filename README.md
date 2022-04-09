@@ -8,16 +8,20 @@ Highway Health will use data from APIs supplied by the following company's APIs:
 ## Requirements
 
 Python 3.10
+
 MySQL or MariaDB SQL Database for local database usage
+
 PIP (to install Python dependencies)
 
+
 [Install webpack (needed to install Deck.gl)](https://github.com/webpack/webpack "Webpack Github")
+
 [Install Deck.gl (this example applies it via Leaflet)](https://github.com/visgl/deck.gl/tree/8.7-release/examples/get-started/pure-js/leaflet "Deck.gl Github")
 
 
 ## Usage
 
-1. Download <list of files>
+1. Download ( ...list of files... )
 
 2. Run `pip install -r requirements.txt` to install Python dependencies. 
 
@@ -31,16 +35,17 @@ npm install _dependency_
 ```
 
 4. Make necessary changes: 
-
-* Database connections: change user/password as needed for local database
+    1. Database connections: change user/password as needed for local database
 
 
 5. Commands to run:
 
-First time setup: 
+   First time setup: 
+
 * `python initCreateDB.py` to create the local database and table(s).
 * `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
 
-To run program: 
+   To run program: 
+   
 * `python XXX`
 * `npm start` within the source directory (development)
