@@ -9,7 +9,7 @@ UK_ACCIDENTS_DATA = ('https://raw.githubusercontent.com/uber-common/'
 
 # Define a layer to display on a map
 layer = pydeck.Layer(
-    'TileLayer',
+    'HexagonLayer',
     UK_ACCIDENTS_DATA,
     get_position='[lng, lat]',
     auto_highlight=True,
@@ -21,16 +21,16 @@ layer = pydeck.Layer(
 
 # Set the viewport location
 view_state = pydeck.ViewState(
-    longitude=-1.415,
-    latitude=52.2323,
-    zoom=6,
-    min_zoom=5,
-    max_zoom=15,
-    pitch=40.5,
-    bearing=-27.36)
+    longitude=-99.9018,
+    latitude=31.9686,
+    zoom=5.5,
+    min_zoom=1,
+    max_zoom=20,
+    pitch=0,
+    bearing=0)
 
 # Render
-r = pydeck.Deck(layers=[layer], initial_view_state=view_state)
+r = pydeck.Deck(layers=[layer], map_style='road', initial_view_state=view_state)
 r.to_html('templates/demo.html')
 
 @app.route('/')
