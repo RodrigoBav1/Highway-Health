@@ -4,26 +4,24 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 # 2014 locations of car accidents in the UK
-UK_ACCIDENTS_DATA = ('https://raw.githubusercontent.com/uber-common/'
-                     'deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv')
+TexasTrafficIncidents = ('traffic_incidents.csv')
+print(TexasTrafficIncidents)
 
 # Define a layer to display on a map
 layer = pydeck.Layer(
-    'HexagonLayer',
-    UK_ACCIDENTS_DATA,
-    get_position='[lng, lat]',
+    'ScatterplotLayer',
+    TexasTrafficIncidents,
+    get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
-    elevation_scale=50,
-    pickable=True,
-    elevation_range=[0, 3000],
-    extruded=True,
-    coverage=1)
+    get_radius=1000,  # Radius is given in meters
+    get_fill_color=[180, 0, 200, 140],  # Set an RGBA value for fill
+    pickable=True)
 
 # Set the viewport location
 view_state = pydeck.ViewState(
     longitude=-99.9018,
     latitude=31.9686,
-    zoom=5.5,
+    zoom=4.2,
     min_zoom=1,
     max_zoom=20,
     pitch=0,
