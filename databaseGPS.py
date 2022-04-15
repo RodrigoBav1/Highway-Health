@@ -71,9 +71,9 @@ class dbWork:
         createTableGPS = 'CREATE TABLE IF NOT EXISTS ' + tableGPS + """
             (GPS_ID INT NOT NULL AUTO_INCREMENT, 
             NAME VARCHAR(100) NOT NULL, 
-            TYPE VARCHAR(15) NOT NULL,
-            LAT VARCHAR(19) NOT NULL,  
-            LON VARCHAR(19) NOT NULL, 
+            TYPE VARCHAR(5) NOT NULL,
+            LAT VARCHAR(20) NOT NULL,  
+            LON VARCHAR(20) NOT NULL, 
             PRIMARY KEY (GPS_ID),
             UNIQUE(GPS_ID, LAT, LON) )"""
         curse.execute(createTableGPS)

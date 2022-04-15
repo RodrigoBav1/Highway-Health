@@ -1,4 +1,4 @@
-﻿# Highway-Health README
+# Highway-Health README
 
 ## Description
 
@@ -13,6 +13,19 @@ MySQL or MariaDB SQL Database for local database usage
 
 PIP (to install Python dependencies)
 
+## Requirements
+
+Python 3.10
+
+MySQL or MariaDB SQL Database for local database usage
+
+
+PIP (to install Python dependencies)
+1. Download ( ...list of files... )
+
+2. Run `pip install -r requirements.txt` to install Python dependencies. 
+
+3. Install the following dependencies: 
 
 [Install webpack (needed to install Deck.gl)](https://github.com/webpack/webpack "Webpack Github")
 
@@ -21,7 +34,20 @@ PIP (to install Python dependencies)
 
 ## Usage
 
-1. Download ( ...list of files... )
+4. Make necessary changes: 
+    1. Database connections: change user/password as needed for local database
+
+
+5. Commands to run:
+
+   First time setup: 
+
+* `python initCreateDB.py` to create the local database and table(s).
+* `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
+
+   To run program: 
+   
+* `python XXX`
 
 2. Run `pip install -r requirements.txt` to install Python dependencies. 
 

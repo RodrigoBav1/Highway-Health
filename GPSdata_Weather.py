@@ -21,6 +21,7 @@ import csv
 import herepy #this doesn't seem to work. looking for other options for python application of HERE
 
 
+
 #Define Global Variables
 
 ## Database creation variables
@@ -38,9 +39,9 @@ tableGPS = 'GPS'
 wGeoCode1 = "https://api.openweathermap.org/data/2.5/weather?lat="
 wGeoCode2 = "&lon="
 wAppid = '&appid='
-openWeatherKey = "aa0247a85f925e67652dd4f439105ec0" 
+openWeatherKey = "aa0247a85f925e67652dd4f439105ec0"
 
-## HERE Variables
+## HERE Variables - Unused?
 hDomain = "https://weather.ls.hereapi.com/"
 hService = "weather/"
 hVersion ="1.0/"    #possibly "3.0.0/" or "3.0/"
