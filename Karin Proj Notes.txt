@@ -48,3 +48,9 @@ Currently working with comprehensive New Mexico road data.
 - found pricing for HERE weather: we may want to stick with OpenWeatherMaps after all...will stop working on this until 
     further discussion with group.
 - Starting to look for a smaller dataset (city only if possible); the size of the NM state requests is pretty huge. 
+
+-----------
+
+4/15/2022
+
+- Modified dataset manipulation script for reading in Richardson, TX dataset. Merging changes with main.
