@@ -9,6 +9,7 @@ instance/
 .coverage
 htmlcov/
 
+hereTraffic/project_config.ini
 dist/
 build/
 *.egg-info/
