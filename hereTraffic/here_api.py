@@ -57,6 +57,7 @@ formatted_data = []
 
 
 column_headers = [
+    'SN',
     'TRAFFIC_ITEM_ID',
     'TRAFFIC_ITEM_TYPE_DESC',
     'CRITICALITY_DESCRIPTION',
