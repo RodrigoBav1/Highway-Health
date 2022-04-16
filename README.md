@@ -10,7 +10,7 @@ Python 3.10
 MariaDB SQL Database or Any other SQL Server Database of your choice
 PIP [Optional, to install dependencies]
 
-### Server Install instructions
+## Server Install instructions
 
 1. Download Project.
 2. Run `pip install -r requirements.txt` to install the required dependencies.
