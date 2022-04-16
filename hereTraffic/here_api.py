@@ -4,7 +4,6 @@ import configparser
 from flask import current_app, flash, jsonify, make_response, redirect, request, url_for
 import json
 from requests.auth import HTTPBasicAuth
-from sympy import true
 import sys
 import pandas as pd
 from herepy import (
@@ -58,6 +57,7 @@ formatted_data = []
 
 
 column_headers = [
+    'SN',
     'TRAFFIC_ITEM_ID',
     'TRAFFIC_ITEM_TYPE_DESC',
     'CRITICALITY_DESCRIPTION',
@@ -89,7 +89,7 @@ data = get_traffic_details()
 
 df = pd.DataFrame(data, columns=column_headers)
 
-df.to_csv('traffic_incidents.csv')
+df.to_csv('../flaskr/traffic_incidents.csv')
 
 
 print(df)
