@@ -1,5 +1,6 @@
-pandas
-requests
-mysql-connector-python
-herepy
-sympy
+Flask==2.1.0
+herepy==3.5.7
+mysql_connector_repackaged==0.3.1
+pandas==1.4.2
+pydeck==0.7.1
+requests==2.27.1

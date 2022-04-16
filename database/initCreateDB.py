@@ -9,8 +9,7 @@
 
 
 ## Import statement(s)
-import databaseGPS
-
+from database import databaseGPS
 
 ## Define Variables
 

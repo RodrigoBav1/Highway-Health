@@ -12,8 +12,6 @@
 ## Import statement(s)
 
 ## Import packages
-from configparser import LegacyInterpolation
-import threading
 import mysql.connector as mySqlConn
 import itertools
 import json
@@ -23,13 +21,12 @@ import pandas as pd
 
 
 ## Import my modules
-import databaseGPS #contains class dbWork and functions dbCreate and dbAddTable
-
+from database import databaseGPS
 
 ## Define Global Variables
 
 ## Source dataset
-file_path = "DataSets/TxDOT_Roadway_Inventory_RICHARDSON.geojson"
+file_path = "../DataSets/TxDOT_Roadway_Inventory_RICHARDSON.geojson"
 
 ## Database creation variables
 ## Change host/user/password if necessary
