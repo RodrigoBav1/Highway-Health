@@ -7,7 +7,9 @@ Highway Health will use data from APIs supplied by the following company's APIs:
 ### Requirements
 
 Python 3.10
+
 MariaDB SQL Database or Any other SQL Server Database of your choice
+
 PIP [Optional, to install dependencies]
 
 ## Server Install instructions
@@ -30,13 +32,11 @@ PIP [Optional, to install dependencies]
 
 #### First time setup:
 
-* `python initCreateDB.py` to create the local database and table(s).
-* `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
+* Run `python initCreateDB.py` to create the local database and table(s).
+* Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
+* Run `npm start` within the source directory (development) to start the ?????
 
-    To run program: 
-   
-* `python XXX`
-* `npm start` within the source directory (development)
+## Additional Requirements
 
 --- Functional Requirements ---
 
