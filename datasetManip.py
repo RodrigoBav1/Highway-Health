@@ -12,8 +12,6 @@
 ## Import statement(s)
 
 ## Import packages
-from configparser import LegacyInterpolation
-import threading
 import mysql.connector as mySqlConn
 import itertools
 import json

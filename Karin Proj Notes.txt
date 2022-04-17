@@ -1,0 +1,70 @@
+
+4/1/2022
+
+OpenWeatherMaps:
+Trendata suggesting using minute forecast 1 hour? Perhaps along with the current weather.
+Could be useful for safety bc the most dangerous times re: weather on the road is 20 minutes before impactful weather.
+
+Historical Data: 
+Per Chris 4/1/2022: Definitely build historical database with our API responses.
+Build with local databases.
+
+Mayor is interested in Richardson data. 
+Might be able to get us more data to play with.
+Currently working with comprehensive New Mexico road data.
+
+
+-----------
+
+4/3/2022
+
+- Successful import of json road data via Python
+- Also successfully storing road: Name, Type, Lat/Lon into a local DB I've created via MySQL in Python.
+- Tested OpenWeatherMaps API with random Lat/Lon info from this dataset, returns valid json.
+
+-----------
+
+4/6/2022
+
+- Working on getting lat/long successfully stored into a dictionary so I can save into the database
+
+-----------
+
+4/7/2022
+
+- Dictionaries successfully created (one with hwy name/type and one with lat/long)
+- Moved different functions into their own classes/modules to make createDB/tables & insert into DB + other items separated
+- I will move from OpenWeatherMaps to Here Weather bc it appears to be able to do most things the same
+- json data has been fully manipulated for insertion into DB
+- DB insertion is now functional
+
+-----------
+
+4/8/2022
+
+- All python scripts are cleaned up and commented appropriately. 
+- started working with Here API. Bootstrapping using with Python via https://herepy.abdullahselek.com/ (pip install herepy)
+- herepy does not function well; attempting manual solution
+- found pricing for HERE weather: we may want to stick with OpenWeatherMaps after all...will stop working on this until 
+    further discussion with group.
+- Starting to look for a smaller dataset (city only if possible); the size of the NM state requests is pretty huge. 
+
+-----------
+
+4/15/2022
+
+- Modified dataset manipulation script for reading in Richardson, TX dataset. Merging changes with main.
+- OpenWeatherMaps works fine. HERE Destination Weather API via HerePy is not working for some reason. Reached out to Musa for help if possible.
+- Saving API results to json file / CSV file
+- Considering design for saving historical data to a database
+
+-----------
+
+4/16/2022
+
+- Update API results to better describe weather conditions. 
+- Write/update a Weather Data Analysis document to descibe what the results from the OpenWeatherMaps api calls mean
+- Work on a document that determines math for how often we can call from OpenWeatherMaps, depending on plan/request types
+- Updated code to test approximately 50 api calls at once (1 call/second), works perfectly
+- Added CST timezone to the date/time result on the API call. Should help us with historical data
+- Start planning how to store results into a database as well as the csv/json files
