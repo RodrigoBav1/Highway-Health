@@ -108,9 +108,9 @@ hexagonLayer = pydeck.Layer(
 )
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(
-    longitude=-99.9018,
-    latitude=31.9686,
-    zoom=5.4,
+    longitude=-96.7970,
+    latitude=32.7767,
+    zoom=9,
     min_zoom=1,
     max_zoom=20,
     pitch=0,
@@ -118,9 +118,9 @@ view_state_homepage = pydeck.ViewState(
 
 # Set the viewport location
 view_state_graph = pydeck.ViewState(
-    longitude=-99.9018,
-    latitude=31.9686,
-    zoom=5.4,
+    longitude=-96.7970,
+    latitude=32.7767,
+    zoom=9,
     min_zoom=1,
     max_zoom=20,
     pitch=45,

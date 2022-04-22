@@ -16,10 +16,10 @@ config.read('project_config.ini')
 my_api_key = config['here']['here_api_key']
 
 # DALLAS BOUNDING BOX LATTITUDES AND LONGITUDES
-west_longitude = -97.000482
-east_longitude = -96.463632
-south_latitude = 32.613216
-north_latitude = 33.023937
+west_longitude = -100.000482
+east_longitude = -92.463632
+south_latitude = 28.613216
+north_latitude = 36.023937
 
 # AUTHORIZE THE TRAFFIC API
 traffic_api = TrafficApi(api_key=my_api_key)
