@@ -11,7 +11,7 @@ WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health
 # Create specialized icon object
 def get_icon_image_id(id, date_time):
     #Decode weather ID
-    MSD = id/100                     #Most Significant Digit
+    MSD = math.floor(id/100)                     #Most Significant Digit
     SSD = math.floor((id%100)/10)    #Middle digit
     LSD = id%10                      #Least Significant Digit
 
