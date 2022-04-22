@@ -8,7 +8,7 @@ app = Flask(__name__)
 TexasTrafficIncidents = ('https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/traffic_incidents.csv')
 
 # Weather URL
-WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/HH-Task-B-2/OpenWeatherMapsOutput.csv"
+WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/weather_updates.csv"
 
 # Create specialized icon object
 def get_icon_image_id(id, date_time):
