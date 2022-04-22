@@ -7,19 +7,6 @@ app = Flask(__name__)
 # 2014 locations of car accidents in the UK
 TexasTrafficIncidents = ('https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/traffic_incidents.csv')
 
-# Define a layer to display on a map
-layer = pydeck.Layer(
-    'ScatterplotLayer',
-    TexasTrafficIncidents,
-    get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
-    auto_highlight=True,
-    radius_scale=1,
-    radius_min_pixels=5,
-    radius_max_pixels=5,
-    get_radius=1,  # Radius is given in meters
-    get_fill_color=['CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 255 : 0', 'CRITICALITY_DESCRIPTION == "minor" ? 204 : CRITICALITY_DESCRIPTION == "major" ? 0 : 128', 'CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 0 : 255', 128],  # Set an RGBA value for fill
-    pickable=True)
-
 # Weather URL
 WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/HH-Task-B-2/OpenWeatherMapsOutput.csv"
 
@@ -84,6 +71,19 @@ data["icon_data"] = None
 for i in data.index:
     data["icon_data"][i] = get_icon_image_id(data.iloc[i]["WEATHER_ID"], data.iloc[i]["DATE_TIME_CST"])
 
+# Define a layer to display on a map
+scatterplotLayer = pydeck.Layer(
+    'ScatterplotLayer',
+    TexasTrafficIncidents,
+    get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
+    auto_highlight=True,
+    radius_scale=1,
+    radius_min_pixels=5,
+    radius_max_pixels=5,
+    get_radius=1,  # Radius is given in meters
+    get_fill_color=['CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 255 : 0', 'CRITICALITY_DESCRIPTION == "minor" ? 204 : CRITICALITY_DESCRIPTION == "major" ? 0 : 128', 'CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 0 : 255', 128],  # Set an RGBA value for fill
+    pickable=True)
+
 # Define IconLayer
 iconLayer = pydeck.Layer(
     type="IconLayer",
@@ -95,8 +95,19 @@ iconLayer = pydeck.Layer(
     pickable=True,
 )
 
+hexagonLayer = pydeck.Layer(
+    "HexagonLayer",
+    TexasTrafficIncidents,
+    get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
+    auto_highlight=True,
+    elevation_scale=1,
+    pickable=True,
+    elevation_range=[0, 3000],
+    extruded=True,
+    coverage=1,
+)
 # Set the viewport location
-view_state = pydeck.ViewState(
+view_state_homepage = pydeck.ViewState(
     longitude=-99.9018,
     latitude=31.9686,
     zoom=5.4,
@@ -105,13 +116,31 @@ view_state = pydeck.ViewState(
     pitch=0,
     bearing=0)
 
+# Set the viewport location
+view_state_graph = pydeck.ViewState(
+    longitude=-99.9018,
+    latitude=31.9686,
+    zoom=5.4,
+    min_zoom=1,
+    max_zoom=20,
+    pitch=45,
+    bearing=0)
+
 # Render
-r = pydeck.Deck(layers=[layer, iconLayer], map_style='road', initial_view_state=view_state)
-r.to_html('templates/demo.html')
+r = pydeck.Deck(layers=[scatterplotLayer, iconLayer], map_style='road', initial_view_state=view_state_homepage)
+r.to_html('templates/homepage.html')
+
+r = pydeck.Deck(layers=[hexagonLayer], map_style='road', initial_view_state=view_state_graph)
+r.to_html('templates/graph.html')
 
 @app.route('/')
-def home():
-   return render_template('demo.html')
+def homepage():
+   return render_template('homepage.html')
+
+@app.route('/graph')
+def graph():
+   return render_template('graph.html')
+
 
 
 if __name__ == '__main__':
