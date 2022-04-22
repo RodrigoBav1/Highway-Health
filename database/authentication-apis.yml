@@ -1,0 +1,1147 @@
+openapi: 3.0.2
+info:
+  title: Authentication API v1.1
+  version: 1.1.x
+  description: 'This specification describes the Authentication v1.1 APIs.
+
+'
+  contact:
+    url: https://platform.here.com
+  license:
+    name: 'Base URL:'
+    url: https://account.api.here.com/authentication/v1.1
+  x-document-meta-data:
+    copyright: "© 2022 HERE Europe B.V."
+    document-id: c6e9bdb7-e114-4424-8f17-5f10e34974eb
+    date-created: '2022-01-18T21:39:06+00:00'
+servers:
+- url: https://account.api.here
+  description: Global
+- url: https://elb.cn-northwest-1.account.hereapi.cn
+  description: China
+tags:
+- name: Application Management
+  description: Application Management APIs enable authorized identities (user/another
+    app) to create applications and authorized identities (user/another app) to manage
+    such applications.
+- name: Application Access Key Management
+  description: These APIs enable authorized identities (user/another app) to manage
+    such access key credentials for the applications including key rotation.
+- name: Application API Key Management
+  description: API Key Management APIs enable identities authorized to manage an application
+    to create and maintain API keys. API Keys can be used to simplify the usage of
+    HLS services by insecure clients.
+components:
+  parameters:
+    App:
+      in: path
+      required: true
+      name: app
+      schema:
+        type: string
+      description: 'HRN identifying the application.
+
+'
+    AccessKey:
+      in: path
+      required: true
+      name: accessKey
+      schema:
+        type: string
+      description: 'HRN identifying the access key.
+
+'
+    ApiKey:
+      in: path
+      required: true
+      name: apiKey
+      schema:
+        type: string
+      description: 'HRN with obfuscated apiKeyId.
+
+'
+      example: hrn:here:account::myrealm:apikey/ygfDVbZc7vJQTRGjC5-YXZbuwWwxFu4FxD5SsWbp-no
+    ApiKeyId:
+      in: path
+      required: true
+      name: apiKeyId
+      schema:
+        type: string
+      description: 'API key id.
+
+'
+      example: 2MZr9AInTFk45NAU8ClIza2Yw7w_AXyUyM4ChvtO7bY
+    User:
+      in: path
+      required: true
+      name: user
+      schema:
+        type: string
+      description: HRN identifying the user account
+    Limit:
+      in: query
+      name: limit
+      required: false
+      description: Number of records to return. Default is 100 records. Maximum is
+        100 records.
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+        default: 100
+    PageToken:
+      name: pageToken
+      in: query
+      required: false
+      description: |
+        If there are more records than 'limit' (between 1 and 100), and there are multiple pages of records, 'pageToken' allows for retrieval of individual pages. In order to retrieve subsequent pages, the client should provide the pageToken returned in the result from the previous API call as input to the following API call.
+
+        Example: If the result for a call to GET /items returns *{..., "pageToken": "abcdefg"}*, in order  to retrieve the next page of 'items' the client should call GET /items?pageToken=abcdefg
+      schema:
+        type: string
+    Action:
+      in: query
+      required: true
+      name: action
+      schema:
+        type: string
+        enum:
+        - read
+        - write
+        - manage
+        - share
+      description: Action contained in the permission on which the result set should
+        be filtered
+    Authorization:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      description: 'The OAuth2 bearer token used to authorize the request. The token
+        should be supplied in the format ''Bearer [token]''. Access token can be obtained
+        via [Get Access Token API](https://developer.here.com/olp/documentation/access_control/api-reference-swagger.html)
+
+'
+    XCorrelationId:
+      in: header
+      name: X-Correlation-ID
+      schema:
+        type: string
+      required: false
+      description: 'Correlates HTTP requests between a client and server. If not present
+        in the incoming request, it will be generated. This header and value will
+        be included in all loglines including access logs. It will also be propagated
+        to downstream services and returned in the response.
+
+'
+    XRequestId:
+      in: header
+      name: X-Request-ID
+      schema:
+        type: string
+      required: false
+      description: 'The unique for the request, used to track this request within
+        the service. X-Request-ID value is NOT propagated to the downstream services.
+
+'
+  headers:
+    XCorrelationId:
+      schema:
+        type: string
+      required: false
+      description: The X-Correlation-ID for the request, used to track this request
+        in the platform. X-Correlation-ID value is propagated throughout the platform.
+    XRequestId:
+      schema:
+        type: string
+      required: false
+      description: The unique for the request, used to track this request within the
+        service. X-Request-ID value is NOT propagated to the downstream services.
+  schemas:
+    CreateAppRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          "$ref": "#/components/schemas/Name"
+        description:
+          "$ref": "#/components/schemas/Description"
+    PatchAppRequest:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/CreateAppRequest"
+    PageWithToken:
+      type: object
+      required:
+      - limit
+      - total
+      - items
+      properties:
+        limit:
+          type: integer
+          example: 1
+          description: number of entries in the response.
+        pageToken:
+          type: string
+          example: KuMvTQrdHVVKuMDDdcIvTQrdci1FWdcIHVVci1FW
+          description: The cursor for pagination. Present only if there is an additional
+            page of data to view.
+        total:
+          type: integer
+          example: 1
+          description: The number of federations matching the search criteria.
+    AppPageWithToken:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/PageWithToken"
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              "$ref": "#/components/schemas/AppInfo"
+            description: List of apps.
+    CreateAccessKeyResponse:
+      type: object
+      properties:
+        accessKeyId:
+          type: string
+          example: 846ee567-7806-403a-97b6-6cf0b6ffa897
+        accessKeyHrn:
+          type: string
+          example: hrn:here:account::myrealm:accesskey/846ee567-7806-403a-97b6-6cf0b6ffa897
+        accessKeySecret:
+          type: string
+          example: KuMvTQrdHVVKuMDDdcIvTQrdci1FWdcIHVVci1FW
+        clientId:
+          type: string
+          example: uIkGzYShLKtQQAimXzvV
+          readOnly: true
+        clientHrn:
+          type: string
+          example: hrn:here:account::myrealm:app/uIkGzYShLKtQQAimXzvV
+        tokenEndpointUrl:
+          type: string
+          example: https://account.api.here.com/oauth2/token
+        enabled:
+          type: boolean
+          example: true
+        createdTime:
+          type: integer
+          format: int64
+          example: 1545041748000
+    AccessKey:
+      type: object
+      properties:
+        accessKeyId:
+          type: string
+          example: 846ee567-7806-403a-97b6-6cf0b6ffa897
+          readOnly: true
+        accessKeyHrn:
+          type: string
+          example: hrn:here:account::myrealm:accesskey/846ee567-7806-403a-97b6-6cf0b6ffa897
+          readOnly: true
+        clientId:
+          type: string
+          example: uIkGzYShLKtQQAimXzvV
+          readOnly: true
+        clientHrn:
+          type: string
+          example: hrn:here:account::myrealm:app/uIkGzYShLKtQQAimXzvV
+          readOnly: true
+        enabled:
+          type: boolean
+          example: true
+        createdTime:
+          type: integer
+          format: int64
+          example: 1545041748000
+          readOnly: true
+        lastTimeUsed:
+          type: integer
+          format: int64
+          description: The timestamp that this Access Key was last used within one
+            minute precision.
+          example: 1545041748000
+          readOnly: true
+    AccessKeyPageWithToken:
+      type: object
+      allOf:
+      - "$ref": "#/components/schemas/PageWithToken"
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              "$ref": "#/components/schemas/AccessKey"
+            description: List of access keys.
+    ClientId:
+      type: string
+      example: uIkGzYShLKtQQAimXzvV
+      description: Identifier for the client/application.
+    Name:
+      type: string
+      example: My Application
+      description: Human readable name of the client.  This field is required unless
+        a clientId is provided.
+    Description:
+      type: string
+      example: This is a description of my application.
+      description: Prose description of the client
+    Status:
+      type: string
+      enum:
+      - active
+      - expired
+      - blacklisted
+      - deactivated
+      example: active
+      description: Status of the application.
+      readOnly: true
+    CreatedTime:
+      type: integer
+      format: int64
+      example: 1432216394712
+      description: Timestamp (milliseconds since the Unix epoch) of when the app was
+        created.
+      readOnly: true
+    Realm:
+      type: string
+      example: HERE
+      description: Realm the application belongs to.
+      readOnly: true
+    ResponseTypes:
+      type: array
+      items:
+        type: string
+        enum:
+        - code
+        - token
+        - id_token
+      example:
+      - code
+      description: Valid value is "code". If the responseTypes value is "id_token"
+        or ["token", "id_token"], then the allowedScopes value must contain "openid".
+        For more details see [here](http://openid.net/specs/openid-connect-core-1_0.html#Authentication)
+        and [here](https://tools.ietf.org/html/rfc6749#section-3.1.1).
+    HRN:
+      type: string
+      example: hrn:here:account::HERE:app/uIkGzYShLKtQQAimXzvV
+      description: HRN of the application.
+      readOnly: true
+    ErrorDetail:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Error message
+          example: Invalid size value
+        source:
+          type: string
+          description: Reference to JSON path
+          example: "$.data.attributes[0].size"
+        message:
+          type: string
+          description: Detailed error message
+          example: Size must be between 3 and 64
+        messageTemplate:
+          type: string
+          description: Optional error template
+          example: validation.constraint.between
+        messagePlaceholders:
+          type: object
+          additionalProperties: {}
+          example:
+            field: size
+            min: 3
+            max: 64
+    ErrorResponse:
+      type: object
+      required:
+      - title
+      - status
+      - code
+      - cause
+      - action
+      - errorId
+      properties:
+        title:
+          description: Error title
+          type: string
+          example: Input data failed validation
+        errorId:
+          type: string
+          example: ERROR-9d862c5a-4cfd-4780-8be4-2728b42849e1
+          description: Unique id for the error. This is searchable from HERE Account
+            logs.
+        status:
+          description: HTTP Status Code
+          type: integer
+          example: 400
+        code:
+          description: Service specific error code
+          type: string
+          example: E110101
+        cause:
+          description: The cause of the error
+          type: string
+          example: The input data in question does not meet validation rules
+        action:
+          description: Actionable instructions for the API consumer
+          type: string
+          example: Correct input data and retry request
+        correlationId:
+          description: Trace ID associated with this request, for future use
+          type: string
+          example: 4199533b-6290-41db-8d79-edf4f4019a74
+        details:
+          type: array
+          description: Collection of error details
+          items:
+            "$ref": "#/components/schemas/ErrorDetail"
+    APIKeyName:
+      type: string
+      description: 'Creator-defined name or short description for the API key.
+
+'
+      example: API Key for test app
+    APIKeyExpiresAt:
+      type: integer
+      format: int64
+      description: |
+        Timestamp (milliseconds since the Unix epoch) of when the API key will expire.
+        If expiresAt is not provided on creation, it will default to '-1', i.e. API key does NOT expire
+      default: -1
+      example: 1545041748000
+    APIKeyEnabled:
+      type: boolean
+      description: 'Whether API key is enabled or disabled.
+
+'
+      default: true
+      example: true
+    APIKeyGenerateRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          "$ref": "#/components/schemas/APIKeyName"
+        expiresAt:
+          "$ref": "#/components/schemas/APIKeyExpiresAt"
+        enabled:
+          "$ref": "#/components/schemas/APIKeyEnabled"
+    APIKeyUpdateRequest:
+      type: object
+      properties:
+        name:
+          "$ref": "#/components/schemas/APIKeyName"
+        expiresAt:
+          "$ref": "#/components/schemas/APIKeyExpiresAt"
+    ApiKey:
+      type: object
+      properties:
+        apiKeyId:
+          type: string
+          description: 'Plaintext query string argument used to authenticate requests
+            to HERE Services using this API Key.
+
+'
+          example: 2MZr9AInTFk45NAU8ClIza2Yw7w_AXyUyM4ChvtO7bY
+        apiKey:
+          type: string
+          description: 'HRN with obfuscated apiKeyId.
+
+'
+          example: hrn:here:account::myrealm:apikey/ygfDVbZc7vJQTRGjC5-YXZbuwWwxFu4FxD5SsWbp-no
+        identity:
+          type: string
+          description: 'HRN identifying an identity to which this API key associated
+            with.
+
+'
+          example: hrn:here:account::myrealm:app/lACE8kgYxsahjbXnvy8w
+        realm:
+          type: string
+          description: 'The HRN of the realm of API key.
+
+'
+          example: hrn:here:account::myrealm:realm/myrealm
+        name:
+          "$ref": "#/components/schemas/APIKeyName"
+        enabled:
+          "$ref": "#/components/schemas/APIKeyEnabled"
+        createdTime:
+          type: integer
+          format: int64
+          description: 'Timestamp (milliseconds since the Unix epoch) of when the
+            API key was created.
+
+'
+          example: 1545041748000
+        expiresAt:
+          "$ref": "#/components/schemas/APIKeyExpiresAt"
+    ApiKeyPageWToken:
+      allOf:
+      - "$ref": "#/components/schemas/PageWithToken"
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              "$ref": "#/components/schemas/ApiKey"
+        example:
+          total: 2
+          pageToken: 7afd7f8e94eb4844ba45
+          limit: 1
+          items:
+          - apiKeyId: 2MZr9AInTFk45NAU8ClIza2Yw7w_AXyUyM4ChvtO7bY
+            apiKey: hrn:here:account::myrealm:apikey/ygfDVbZc7vJQTRGjC5-YXZbuwWwxFu4FxD5SsWbp-no
+            identity: hrn:here:account::myrealm:app/lACE8kgYxsahjbXnvy8w
+            realm: hrn:here:account::myrealm:realm/myrealm
+            name: First API key for ABC app
+            enabled: true
+            createdTime: 1545041748000
+            expiresAt: 1545041748456
+    AppInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: '0123456789ABCDEFGHHIJKLM'
+          description: Identifier for the client/application.
+        hrn:
+          type: string
+          readOnly: true
+          example: hrn:here:account::myrealm:app/0123456789ABCDEFGHHIJKLM
+          description: HRN for the client/application.
+        realm:
+          type: string
+          readOnly: true
+          example: myrealm
+          description: The realm to which the app belongs.
+        name:
+          type: string
+          readOnly: true
+          example: Some Application
+          description: Human readable name of the client.
+        description:
+          type: string
+          readOnly: true
+          example: Application for doing something.
+          description: Prose description of the client.
+        status:
+          type: string
+          readOnly: true
+          example: active
+          description: Status of the client.
+        createdTime:
+          "$ref": "#/components/schemas/CreatedTime"
+  responses:
+    Unauthorized:
+      description: Access is denied due to invalid credentials
+      headers:
+        X-Correlation-ID:
+          "$ref": "#/components/headers/XCorrelationId"
+        X-Request-ID:
+          "$ref": "#/components/headers/XRequestId"
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: You do not have permission to perform this action
+      headers:
+        X-Correlation-ID:
+          "$ref": "#/components/headers/XCorrelationId"
+        X-Request-ID:
+          "$ref": "#/components/headers/XRequestId"
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: The requested resource was not found, see error response for details
+      headers:
+        X-Correlation-ID:
+          "$ref": "#/components/headers/XCorrelationId"
+        X-Request-ID:
+          "$ref": "#/components/headers/XRequestId"
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ErrorResponse"
+    BadRequest:
+      description: Invalid input provided, see error response for details
+      headers:
+        X-Correlation-ID:
+          "$ref": "#/components/headers/XCorrelationId"
+        X-Request-ID:
+          "$ref": "#/components/headers/XRequestId"
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ErrorResponse"
+    TooManyRequests:
+      description: User or Client has sent too many requests in a given amount of
+        time ("rate limiting")., see error response for details
+      headers:
+        X-Correlation-ID:
+          "$ref": "#/components/headers/XCorrelationId"
+        X-Request-ID:
+          "$ref": "#/components/headers/XRequestId"
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ErrorResponse"
+paths:
+  "/apps":
+    parameters:
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    get:
+      parameters:
+      - "$ref": "#/components/parameters/Limit"
+      - "$ref": "#/components/parameters/PageToken"
+      tags:
+      - Application Management
+      summary: Get Applications
+      description: 'List applications managed by the caller.
+
+'
+      operationId: listApplications
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AppPageWithToken"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+    post:
+      tags:
+      - Application Management
+      summary: Create Application
+      description: |
+        Creates a new application.
+        * The application will be created in the same realm the calling identity belongs to. This information is obtained from the Access Token.
+        * The identity creating the app will be granted permission to 'manage' and delegate application management ('share').
+      operationId: createApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateAppRequest"
+            example:
+              name: My Application
+              description: This is a description of My Application
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AppInfo"
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+  "/apps/{app}":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    get:
+      tags:
+      - Application Management
+      summary: Get Application
+      description: 'Retrieve the application identified by the provided hrn.
+
+'
+      operationId: getApplication
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AppInfo"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+    patch:
+      tags:
+      - Application Management
+      summary: Update Application
+      description: 'Update the application identified by the provided hrn.
+
+'
+      operationId: updateApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PatchAppRequest"
+            example:
+              name: My Updated Application
+              description: This is a new description of My Application
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AppInfo"
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+    delete:
+      tags:
+      - Application Management
+      summary: Delete Application
+      description: 'Delete the application identified by the provided hrn.
+
+'
+      operationId: deleteApplication
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/apps/{app}/accessKeys":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - Application Access Key Management
+      summary: Create Access Key
+      description: 'Create a new access key for the requested application.
+
+'
+      operationId: createAccessKey
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CreateAccessKeyResponse"
+            text/plain:
+              schema:
+                "$ref": "#/components/schemas/CreateAccessKeyResponse"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+    get:
+      parameters:
+      - "$ref": "#/components/parameters/Limit"
+      - "$ref": "#/components/parameters/PageToken"
+      tags:
+      - Application Access Key Management
+      summary: Get Access Keys
+      description: 'Retrieve the list of access keys associated with the requested
+        application.
+
+'
+      operationId: getAccessKeys
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AccessKeyPageWithToken"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/apps/{app}/accessKeys/{accessKey}":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/AccessKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    delete:
+      tags:
+      - Application Access Key Management
+      summary: Delete Access Key
+      description: 'Delete the requested access key for the requested application.
+
+'
+      operationId: deleteAccessKey
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/apps/{app}/accessKeys/{accessKey}/enable":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/AccessKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - Application Access Key Management
+      summary: Enable Access Key
+      description: 'Enable the requested access key for the given application.
+
+'
+      operationId: enableAccessKey
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/apps/{app}/accessKeys/{accessKey}/disable":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/AccessKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - Application Access Key Management
+      summary: Disable Access Key
+      description: 'Disable the requested access key for the given application.
+
+'
+      operationId: disableAccessKey
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/apps/{app}/apiKeys":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - API Key Management
+      summary: Generate API Key
+      operationId: generateAPIKey
+      description: 'Generates a new API key for the application. API key will be enabled
+        on creation. A maximum of 2 API keys are maintained per application at any
+        given point.
+
+'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/APIKeyGenerateRequest"
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiKey"
+        '400':
+          description: "* 400337 - API Key cannot be generated for client with issuer(s).\n"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: "* 404660 - No app exists with the given id.\n"
+        '409':
+          description: "* 409303 - Reached allowed maximum number of active API keys
+            per application. Delete an API key to generate another one.\n"
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+    get:
+      parameters:
+      - "$ref": "#/components/parameters/PageToken"
+      - "$ref": "#/components/parameters/Limit"
+      tags:
+      - API Key Management
+      summary: Get API Keys
+      operationId: getAPIKeys
+      description: 'Lists the API keys generated for an application.
+
+'
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiKeyPageWToken"
+        '404':
+          description: "* 404660 - No app exists with the given id.\n"
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+  "/apps/{app}/apiKeys/{apiKey}":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/ApiKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    delete:
+      tags:
+      - API Key Management
+      summary: Delete API Key
+      operationId: deleteAPIKey
+      description: |
+        Deletes API key of the application. This API key can no longer be used for authentication or authorization.
+
+        Since API key cannot be recovered once deleted, it is recommended that the client application calling this
+        end-point should enforce a confirmation of delete action (Example: Confirm box saying: Are you sure you want to delete this API Key?).
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: |
+            * 404660 - No app exists with the given id.
+            * 404666 - The API key does not exist.
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+    get:
+      tags:
+      - API Key Management
+      summary: Retrieve API Key by user
+      operationId: getAPIKeyByUser
+      description: 'Retrieves API key of the application.
+
+'
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiKey"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: |
+            * 404660 - No app exists with the given id.
+            * 404666 - The API key does not exist
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+    patch:
+      tags:
+      - API Key Management
+      summary: Update API Key
+      operationId: updateAPIKey
+      description: 'Updates API key of the application.
+
+'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/APIKeyUpdateRequest"
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiKey"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: |
+            * 404660 - No app exists with the given id.
+            * 404666 - The API key does not exist.
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+  "/apps/{app}/apiKeys/{apiKey}/enable":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/ApiKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - API Key Management
+      summary: Enable API Key
+      description: 'Enables API key of the application.
+
+'
+      operationId: enableAPIKey
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: |
+            * 404660 - No app exists with the given id.
+            * 404666 - The API key does not exist.
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
+  "/apps/{app}/apiKeys/{apiKey}/disable":
+    parameters:
+    - "$ref": "#/components/parameters/App"
+    - "$ref": "#/components/parameters/ApiKey"
+    - "$ref": "#/components/parameters/Authorization"
+    - "$ref": "#/components/parameters/XCorrelationId"
+    - "$ref": "#/components/parameters/XRequestId"
+    post:
+      tags:
+      - API Key Management
+      summary: Disable API Key
+      description: 'Disables API key of the application.
+
+'
+      operationId: disableAPIKey
+      responses:
+        '204':
+          description: No Content
+          headers:
+            X-Correlation-ID:
+              "$ref": "#/components/headers/XCorrelationId"
+            X-Request-ID:
+              "$ref": "#/components/headers/XRequestId"
+        '401':
+          description: "* 401300 - Access is denied due to invalid credentials.\n"
+        '404':
+          description: |
+            * 404660 - No app exists with the given id.
+            * 404666 - The API key does not exist.
+        '429':
+          description: "* 429002 - Request blocked because of too many requests made.
+            Wait for a while before making a new request.\n"
