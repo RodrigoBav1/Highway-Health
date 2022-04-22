@@ -104,7 +104,7 @@ hexagonLayer = pydeck.Layer(
     pickable=True,
     elevation_range=[0, 3000],
     extruded=True,
-    coverage=1,
+    coverage=0.2,
 )
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(
@@ -113,7 +113,7 @@ view_state_homepage = pydeck.ViewState(
     zoom=9,
     min_zoom=1,
     max_zoom=20,
-    pitch=0,
+    pitch=45,
     bearing=0)
 
 # Set the viewport location
