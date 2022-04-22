@@ -20,6 +20,14 @@ PIP [Optional, to install dependencies]
 3. To run the server, use `python /flaskr/__init__.py`
 4. Visit the server on `http://localhost:5000` or `127.0.0.1:5000`
 
+#### Sitemap
+[url] / - homepage (displays traffic and weather information as plot points)
+
+[url] / graph - 3d hexagonal bar graph (displays traffic information as elevated bars)
+
+[url] / heatmap - heatmap (displays traffic information on a heatmap)
+
+
 ## Database Install instructions
 
 1. Download Project.
