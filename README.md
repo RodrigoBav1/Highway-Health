@@ -4,14 +4,14 @@
 
 Highway Health will use data from APIs supplied by the following company's APIs: OpenWeatherMaps and Here Real-Time Traffic. The data gathered from those APIs will be utilitized to create a map visualization via Deck.gl. This project supports an end user that requires knowledge of the status of roads, such as shipping and trucking companies. 
 
-
-## Requirements
+### Requirements
 
 Python 3.10
 
-MySQL or MariaDB SQL Database for local database usage
+MariaDB SQL Database or Any other SQL Server Database of your choice
 
-PIP [Optional, to install Python dependencies]
+PIP [Optional, to install dependencies]
+
 
 OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 

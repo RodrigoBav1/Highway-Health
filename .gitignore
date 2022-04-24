@@ -1,0 +1,15 @@
+venv/
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+hereTraffic/project_config.ini
+dist/
+build/
+*.egg-info/

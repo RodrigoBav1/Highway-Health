@@ -72,7 +72,7 @@ class dbWork:
         createTableGPS = 'CREATE TABLE IF NOT EXISTS ' + tableGPS + """
             (GPS_ID INT NOT NULL AUTO_INCREMENT, 
             NAME VARCHAR(100) NOT NULL, 
-            TYPE VARCHAR(5) NOT NULL,
+            TYPE VARCHAR(5) NOT NULL
             LAT VARCHAR(10) NOT NULL,  
             LON VARCHAR(10) NOT NULL, 
             PRIMARY KEY (GPS_ID),
@@ -109,18 +109,16 @@ class dbWork:
 
 
 
-
     ## Function addToGPS() inserts data from our geojson 
     ## dataset into the highwayhealth database / gps table
     def addToGPS (conn, curse, tableGPS, hwyName, hwyType, lat, lon):
-        #IGNORE keyword will prevent duplicate lat/long pairs from being added erroneously
+
         insertIntoGPS = 'INSERT INTO ' + tableGPS + """ 
         (NAME, TYPE, LAT, LON) 
         VALUES ('""" + hwyName + """','""" + hwyType + """','""" + lat + """','""" + lon + """')"""
         curse.execute(insertIntoGPS)
 
         conn.commit()
-
 
 
 

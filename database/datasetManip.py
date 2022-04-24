@@ -55,7 +55,6 @@ def datasetWork():
 
      
 
-
     ## Define variables for below while loop
     a = 0
     stType = '' 
@@ -85,7 +84,7 @@ def datasetWork():
         if (stType == "US" or stType == "SH"): 
 
             # could add null value handling in the future if different dataset, not necessary here
-
+            
             for propertyName in data["features"][a]["properties"]["HWY"]:
                 stName = stName + propertyName
 
@@ -219,7 +218,6 @@ def datasetWork():
         k += 1
 
 
-
     ## Define variables for below while loop
     e = 0
     q = 0 
@@ -271,6 +269,7 @@ def datasetWork():
     stDict["Type"] = stTypeFinal
     
 
+
     ## Connect to highwayhealth database so we can insert data into gps table
     print("CONNECTING TO MYSQL DATABASE")
     conn = mySqlConn.connect(host = host, user = user, password = password, database = database)
@@ -282,12 +281,14 @@ def datasetWork():
     x = 0 
     y = 0
     count = q   # reassign count to be how many values we know we have after deduplication; should be 310
+
     roadType = ''
     roadName = ''
     latIndex = ''
     lonIndex = ''
     listLat = []
     listLon = []
+
     ## Define empty list for writing to csv file
     writeToFile = []
     
