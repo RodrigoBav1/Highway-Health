@@ -2,16 +2,16 @@
 
 ## Description
 
-Highway Health will use data from APIs supplied by the following company's APIs: OpenWeatherMaps, Here Real-Time Traffic, Twitter. The data gathered from those APIs will be utilitized to create a map visualization via Deck.gl. This project supports an end user that requires knowledge of the status of roads, such as shipping and trucking companies. 
+Highway Health will use data from APIs supplied by the following company's APIs: OpenWeatherMaps, Here Real-Time Traffic, Twitter. The data gathered from those APIs will be utilitized to create a map visualization via Deck.gl. This project supports an end user that requires knowledge of the status of roads, such as shipping and trucking companies.
 
-
-## Requirements
+### Requirements
 
 Python 3.10
 
-MySQL or MariaDB SQL Database for local database usage
+MariaDB SQL Database or Any other SQL Server Database of your choice
 
-PIP [Optional, to install Python dependencies]
+PIP [Optional, to install dependencies]
+
 
 ## Server Install instructions
 
@@ -45,6 +45,7 @@ PIP [Optional, to install Python dependencies]
 * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
 * Run `npm start` within the source directory (development) to start the ?????
 
+
 * Schedule the scripts to get hourly API calls: 
 
 * On Windows, create a batch file and use the Windows Scheduler to run the API calls on an hourly basis. 
@@ -56,6 +57,7 @@ PIP [Optional, to install Python dependencies]
     6. Select Finish, and your hourly task will be scheduled. 
 * On Linux/Mac, schedule with a cronjob.
     1. Add instructions when i have time...this is temporary
+
 
 ## Additional Requirements
 
