@@ -18,6 +18,7 @@ import requests
 import json
 import pandas as pd
 import configparser
+import schedule
 # for recording when API calls occurred
 from datetime import datetime
 import pytz
@@ -69,21 +70,6 @@ openWeatherKey = config['open']['open_api_key']
 wUnits = '&units=imperial'
 wlang = '&lang=en'
 
-'''
-## HERE Variables - NOT USING NOW; MORE EXPENSIVE AND MORE CHALLENGING TO MAKE FUNCTION
-# Access your API key saved in project_config.ini file
-my_api_key = config['here']['here_api_key']
-base_url = 'https://weather.hereapi.com/v3'
-format = ".json"
-product = "&product=" 
-productObs = 'observation'     # current weather conditions from the eight closest locations to the specified location
-productalerts24 = 'alerts'     # forecasted weather alerts for the next 24 hours
-productAlertsNWS = 'nws_alerts'    # all active watches and warnings for the US and Canada
-# Boolean, if set to true, the response only includes the closest location. 
-# Only available when the product parameter is set to observation.
-oneObs = 'oneobservation' 
-metric = "metric" # If set to false, the response contains imperial units (feet, inch, Fahrenheit, miles). Default: true
-'''
 
 
 ## OpenWeatherMaps API call using queried lat/lon data from the database
@@ -220,7 +206,80 @@ def openWeatherCall(result, columnHeaders, columnHeadersDB, conn, curse):
     print("\nExiting openWeatherCall() function\n")
 
 
+
+## Define function to run API calls once per hour
+def hourlyScript(columnHeaders, columnHeadersDB, conn, curse):
+    print("Entering hourly function\n")
+
+    #curse.execute("SELECT LAT, LON FROM GPS WHERE LAT = '32.9750' AND LON = '-96.716'") # test
+
+    ## Select every lat/long pair in our Richardson database (892 total)
+    selectStmt = "SELECT LAT, LON FROM " + str(tableGPS) 
+    curse.execute(selectStmt)
+    result = curse.fetchall()
+
+    ## Call function that will make API calls and manipulate the results
+    ## Stores results into hourly csv file and historical database
+    openWeatherCall(result, columnHeaders, columnHeadersDB, conn, curse)
+
+    print("Exiting hourly function\n")
+
+
+
+## Define main method
+def main():
+    print("Entering main method\n")
+
+    print("CONNECTING TO MYSQL DATABASE")
+    conn = mySqlConn.connect(host = host, user = user, password = password, database = database)
+    curse = conn.cursor()
+
+
+    ## Define column headers for hourly csv file and historical database insertions
+    columnHeaders = ['DATE_TIME_CST','LATITUDE','LONGITUDE',
+        'WEATHER_ID','WEATHER_DESCRIPTION', 'WEATHER_ICON', 'TEMPERATURE','HUMIDITY_PERCENT', 
+        'VISIBILITY_METERS','WIND_SPEED_MPH','DANGER_LEVELS']
+
+    columnHeadersDB = ['ID','DATE_TIME_CST','LATITUDE','LONGITUDE',
+        'WEATHER_ID','WEATHER_DESCRIPTION','WEATHER_ICON','TEMPERATURE','HUMIDITY_PERCENT', 
+        'VISIBILITY_METERS','WIND_SPEED_MPH','DANGER_LEVELS']
+
+
+
+    ## Runs API calls for weather every hour
+    schedule.every().hour.do(hourlyScript, columnHeaders, columnHeadersDB, conn, curse)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+    # commit any changes to database and close connection to it
+    conn.commit
+    conn.close
+
+    print("Exiting main method and ending program\n")
+
+## Call main method    
+main()
+
+
+
 '''
+## HERE Variables - NOT USING NOW; MORE EXPENSIVE AND MORE CHALLENGING TO MAKE FUNCTION
+# Access your API key saved in project_config.ini file
+my_api_key = config['here']['here_api_key']
+base_url = 'https://weather.hereapi.com/v3'
+format = ".json"
+product = "&product=" 
+productObs = 'observation'     # current weather conditions from the eight closest locations to the specified location
+productalerts24 = 'alerts'     # forecasted weather alerts for the next 24 hours
+productAlertsNWS = 'nws_alerts'    # all active watches and warnings for the US and Canada
+# Boolean, if set to true, the response only includes the closest location. 
+# Only available when the product parameter is set to observation.
+oneObs = 'oneobservation' 
+metric = "metric" # If set to false, the response contains imperial units (feet, inch, Fahrenheit, miles). Default: true
+
+
 def hereDestWeather(result): # CURRENTLY DOES NOT WORK. MAY REMOVE.
     print("\nEntering hereDestWeather() function\n")
 
@@ -246,38 +305,3 @@ def hereDestWeather(result): # CURRENTLY DOES NOT WORK. MAY REMOVE.
 
     print("\nExiting hereDestWeather() function\n")
 '''
-
-
-def main():
-    print("Entering main method\n")
-
-    print("CONNECTING TO MYSQL DATABASE")
-    conn = mySqlConn.connect(host = host, user = user, password = password, database = database)
-    curse = conn.cursor()
-
-    curse.execute("SELECT LAT, LON FROM GPS WHERE LAT = '32.9750' AND LON = '-96.716'") #test
-    #curse.execute("SELECT LAT, LON FROM GPS WHERE TYPE IN('US','SH','TL')") # tests 425 rows call to API
-
-    ## ALL LAT/LON PAIRS
-    #selectStmt = "SELECT LAT, LON FROM " + str(tableGPS) 
-    #curse.execute(selectStmt)
-    result = curse.fetchall()
-
-    columnHeaders = ['DATE_TIME_CST','LATITUDE','LONGITUDE',
-        'WEATHER_ID','WEATHER_DESCRIPTION', 'WEATHER_ICON', 'TEMPERATURE','HUMIDITY_PERCENT', 
-        'VISIBILITY_METERS','WIND_SPEED_MPH','DANGER_LEVELS']
-
-    columnHeadersDB = ['ID','DATE_TIME_CST','LATITUDE','LONGITUDE',
-        'WEATHER_ID','WEATHER_DESCRIPTION','WEATHER_ICON','TEMPERATURE','HUMIDITY_PERCENT', 
-        'VISIBILITY_METERS','WIND_SPEED_MPH','DANGER_LEVELS']
-    
-    openWeatherCall(result, columnHeaders, columnHeadersDB, conn, curse) #testing weather data
-    #hereDestWeather(result) #currently does not work
-
-    # commit any changes to database and close connection to it
-    conn.commit
-    conn.close
-
-    print("Exiting main method\n")
-    
-main()

@@ -7,3 +7,7 @@ here_client_id = <YOUR_HERE_CLIENT_ID>
 here_access_key_id = <YOUR_HERE_ACCESS_KEY_ID>
 here_access_key_secret = <YOUR_HERE_ACCESS_KEY_SECRET>
 here_token_endpoint_url = <YOUR_HERE_TOKEN_ENDPOINT_URL>
+
+
+[open]
+open_api_key = <YOUR_OPEN_WEATHER_MAPS_API_KEY>
