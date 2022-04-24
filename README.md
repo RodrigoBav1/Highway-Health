@@ -2,7 +2,7 @@
 
 ## Description
 
-Highway Health will use data from APIs supplied by the following company's APIs: OpenWeatherMaps, Here Real-Time Traffic, Twitter. The data gathered from those APIs will be utilitized to create a map visualization via Deck.gl. This project supports an end user that requires knowledge of the status of roads, such as shipping and trucking companies.
+Highway Health will use data from APIs supplied by the following company's APIs: OpenWeatherMaps and Here Real-Time Traffic. The data gathered from those APIs will be utilitized to create a map visualization via Deck.gl. This project supports an end user that requires knowledge of the status of roads, such as shipping and trucking companies. 
 
 ### Requirements
 
@@ -12,6 +12,8 @@ MariaDB SQL Database or Any other SQL Server Database of your choice
 
 PIP [Optional, to install dependencies]
 
+
+OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 
 ## Server Install instructions
 
@@ -41,23 +43,11 @@ PIP [Optional, to install dependencies]
 
 #### First time setup:
 
+* Update `project_config.ini` file with appropriate API keys, tokens, and IDs.
 * Run `python initCreateDB.py` to create the local database and table(s).
 * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
+* Run `python openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps.
 * Run `npm start` within the source directory (development) to start the ?????
-
-
-* Schedule the scripts to get hourly API calls: 
-
-* On Windows, create a batch file and use the Windows Scheduler to run the API calls on an hourly basis. 
-    1. For the batch file, open notepad and enter the file locations for python.exe and the python script you wish to run. 
-    2. This should look like: `"C:\ ... \Python\python.exe" "C:\Users\...FolderName\pythonScript.py"`
-    3. Then save as `yourfilename.bat`
-    4. Open the Task Scheduler application (this is in the Windows Administrative Tools). 
-    5. Select "Create Task." Give it a Name, Select Action -> Start a Program and select the .bat file you created, then set a Trigger that will run the .bat file hourly.
-    6. Select Finish, and your hourly task will be scheduled. 
-* On Linux/Mac, schedule with a cronjob.
-    1. Add instructions when i have time...this is temporary
-
 
 ## Additional Requirements
 
