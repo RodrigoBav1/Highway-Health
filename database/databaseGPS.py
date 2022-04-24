@@ -24,6 +24,7 @@ class dbWork:
         self.tableGPS = tableGPS
 
 
+
     ## Function dbCreate() will connect to MySQL and create highwayhealth DB
     def dbCreate (host, user, password, database):
         print("Entering dbCreate() function\n")
@@ -50,7 +51,7 @@ class dbWork:
 
 
     ## Function dbAddTable() creates any associated table(s) in highwayhealth database
-    def dbAddTable (host, user, password, database, tableGPS):
+    def dbAddTable (host, user, password, database, tableGPS, tableWeatherHist):
         print("Entering dbAddTable() function\n")
 
         # Connect to MySQL highwayhealth database
@@ -72,12 +73,34 @@ class dbWork:
             (GPS_ID INT NOT NULL AUTO_INCREMENT, 
             NAME VARCHAR(100) NOT NULL, 
             TYPE VARCHAR(5) NOT NULL,
-            LAT VARCHAR(20) NOT NULL,  
-            LON VARCHAR(20) NOT NULL, 
+            LAT VARCHAR(10) NOT NULL,  
+            LON VARCHAR(10) NOT NULL, 
             PRIMARY KEY (GPS_ID),
-            UNIQUE(GPS_ID, LAT, LON) )"""
+            UNIQUE KEY u_latlong (LAT,LON))"""
         curse.execute(createTableGPS)
         print("TABLE " + tableGPS + " CREATED")
+
+
+
+        ## Create table 'WEATHER_HISTORICAL' if it does not exist
+        createTableWeatherHist = 'CREATE TABLE IF NOT EXISTS ' + tableWeatherHist + """
+            (W_ID INT NOT NULL AUTO_INCREMENT,
+            REF_ID INT NOT NULL, 
+            DATETIME_CST VARCHAR(20) NOT NULL, 
+            LAT VARCHAR(10) NOT NULL,  
+            LON VARCHAR(10) NOT NULL, 
+            WEATHER_ID INT NOT NULL,
+            WEATHER_DESC VARCHAR(100) NOT NULL,
+            WEATHER_ICON VARCHAR(5) NOT NULL,
+            TEMP_F DECIMAL(5,2) NOT NULL,
+            HUMIDITY_PERCENT INT NOT NULL,
+            VISIBILITY_M INT NOT NULL,
+            WINDSPEED_MPH INT NOT NULL,
+            DANGER_LEVELS VARCHAR(20) NOT NULL,
+            PRIMARY KEY (W_ID, REF_ID),
+            FOREIGN KEY (REF_ID) REFERENCES GPS (GPS_ID) )"""
+        curse.execute(createTableWeatherHist)
+        print("TABLE " + tableWeatherHist + " CREATED")
 
         conn.commit()
         conn.close()
@@ -86,14 +109,33 @@ class dbWork:
 
 
 
+
     ## Function addToGPS() inserts data from our geojson 
     ## dataset into the highwayhealth database / gps table
     def addToGPS (conn, curse, tableGPS, hwyName, hwyType, lat, lon):
-
+        #IGNORE keyword will prevent duplicate lat/long pairs from being added erroneously
         insertIntoGPS = 'INSERT INTO ' + tableGPS + """ 
         (NAME, TYPE, LAT, LON) 
         VALUES ('""" + hwyName + """','""" + hwyType + """','""" + lat + """','""" + lon + """')"""
         curse.execute(insertIntoGPS)
+
+        conn.commit()
+
+
+
+
+    ## Function addToWeather() inserts data from our weather API calls
+    ## into the highwayhealth database / weather_historical table
+    def addToWeather (conn, curse, tableWeatherHist, ID, DATE_TIME, LATITUDE, LONGITUDE, WEATHER_ID, WEATHER_DESCRIPTION, WEATHER_ICON,
+        TEMPERATURE, HUMIDITY, VISIBILITY, WIND_SPEED, DANGER):
+
+        insertIntoWeather = 'INSERT INTO ' + str(tableWeatherHist) + """ 
+        (REF_ID, DATETIME_CST, LAT, LON, WEATHER_ID, WEATHER_DESC, WEATHER_ICON, TEMP_F, HUMIDITY_PERCENT, VISIBILITY_M, WINDSPEED_MPH, DANGER_LEVELS) 
+        VALUES ('""" + str(ID) + """','""" + str(DATE_TIME) + """','""" + str(LATITUDE) + """','""" + str(LONGITUDE) + """
+        ','""" + str(WEATHER_ID) + """','""" + str(WEATHER_DESCRIPTION) + """','""" + str(WEATHER_ICON)  + """','""" + str(TEMPERATURE) + """','""" + str(HUMIDITY) + """
+        ','""" + str(VISIBILITY) + """','""" + str(WIND_SPEED) + """','""" + str(DANGER) + """')"""
+
+        curse.execute(insertIntoWeather)
 
         conn.commit()
 

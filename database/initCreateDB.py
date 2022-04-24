@@ -21,8 +21,9 @@ user = 'root'
 password = 'testnewpassword'
 database = 'highwayhealth'
 tableGPS = 'GPS'
+tableWeatherHist = 'WEATHER_HISTORICAL'
 
 
 ## Call functions to create database and database table(s)
 databaseGPS.dbWork.dbCreate(host, user, password, database) #creates DB highwayhealth
-databaseGPS.dbWork.dbAddTable(host, user, password, database, tableGPS) #adds gps table
+databaseGPS.dbWork.dbAddTable(host, user, password, database, tableGPS, tableWeatherHist) #adds gps table
