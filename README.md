@@ -12,7 +12,6 @@ MariaDB SQL Database or Any other SQL Server Database of your choice
 
 PIP [Optional, to install dependencies]
 
-
 OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 
 ## Server Install instructions
@@ -44,6 +43,7 @@ OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 #### First time setup:
 
 * Update `project_config.ini` file with appropriate API keys, tokens, and IDs.
+* Update `openWeatherAPIcalls.py` FILEPATH in `sys.path.insert(0, r'FILEPATH\database')` in  with your local filepath
 * Run `python initCreateDB.py` to create the local database and table(s).
 * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
 * Run `python openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps.
