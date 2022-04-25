@@ -32,7 +32,7 @@ ICON_DATA = create_image_data()
 # Define a layer to display on a map
 scatterplotLayer = pydeck.Layer(
     'ScatterplotLayer',
-    TEXAS_TRAFFIC_INCIDENTS_FILEPATH,
+    data=pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH),
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     radius_scale=1,
@@ -41,7 +41,6 @@ scatterplotLayer = pydeck.Layer(
     get_radius=1,  # Radius is given in meters
     get_fill_color=['CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 255 : 0', 'CRITICALITY_DESCRIPTION == "minor" ? 204 : CRITICALITY_DESCRIPTION == "major" ? 0 : 128', 'CRITICALITY_DESCRIPTION == "minor" ? 0 : CRITICALITY_DESCRIPTION == "major" ? 0 : 255', 128],  # Set an RGBA value for fill
     pickable=True)
-
 
 # Define IconLayer
 iconLayer = pydeck.Layer(
@@ -56,14 +55,14 @@ iconLayer = pydeck.Layer(
 
 hexagonLayer = pydeck.Layer(
     "HexagonLayer",
-    TEXAS_TRAFFIC_INCIDENTS_FILEPATH,
+    data=pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH),
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     elevation_scale=1,
     pickable=True,
     elevation_range=[0, 3000],
     extruded=True,
-    coverage=0.7,
+    coverage=0.3,
 )
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(
