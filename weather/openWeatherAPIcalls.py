@@ -245,8 +245,11 @@ def main():
         'VISIBILITY_METERS','WIND_SPEED_MPH','DANGER_LEVELS']
 
 
+    ## First call to the API service when the script is started
+    hourlyScript(columnHeaders, columnHeadersDB, conn, curse)
 
-    ## Runs API calls for weather every hour
+
+    ## After first run, waits 1 hour before running API calls for weather every hour until program is terminated
     schedule.every().hour.do(hourlyScript, columnHeaders, columnHeadersDB, conn, curse)
     while True:
         schedule.run_pending()
