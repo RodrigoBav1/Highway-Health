@@ -4,11 +4,11 @@ import math
 from flask import Flask, render_template
 app = Flask(__name__)
 
-# 2014 locations of car accidents in the UK
-TexasTrafficIncidents = ('https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/traffic_incidents.csv')
+# Texas Traffic Incidents csv FILEPATH
+TEXAS_TRAFFIC_INCIDENTS_FILEPATH = "../hereTraffic/traffic_incidents.csv"
 
-# Weather URL
-WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/weather_updates.csv"
+# Texas Weather csv FILEPATH
+WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
 
 # Create specialized icon object
 def get_icon_image_id(id, date_time):
@@ -66,7 +66,7 @@ def get_icon_image_id(id, date_time):
     return icon_data
 
 # Append icon data to csv file
-data = pandas.read_csv(WEATHER_DATA_URL)
+data = pandas.read_csv(WEATHER_DATA_FILEPATH)
 data["icon_data"] = None
 for i in data.index:
     data["icon_data"][i] = get_icon_image_id(data.iloc[i]["WEATHER_ID"], data.iloc[i]["DATE_TIME_CST"])
@@ -74,7 +74,7 @@ for i in data.index:
 # Define a layer to display on a map
 scatterplotLayer = pydeck.Layer(
     'ScatterplotLayer',
-    TexasTrafficIncidents,
+    TEXAS_TRAFFIC_INCIDENTS_FILEPATH,
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     radius_scale=1,
@@ -97,14 +97,14 @@ iconLayer = pydeck.Layer(
 
 hexagonLayer = pydeck.Layer(
     "HexagonLayer",
-    TexasTrafficIncidents,
+    TEXAS_TRAFFIC_INCIDENTS_FILEPATH,
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     elevation_scale=1,
     pickable=True,
     elevation_range=[0, 3000],
     extruded=True,
-    coverage=0.2,
+    coverage=0.7,
 )
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(
