@@ -4,4 +4,6 @@ mysql_connector_repackaged==0.3.1
 pandas==1.4.2
 pydeck==0.7.1
 requests==2.27.1
-mysql-connector-python
+mysql-connector-python~=8.0.28
+django-scheduler~=0.9.6
+pytz~=2022.1

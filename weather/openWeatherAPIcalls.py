@@ -28,8 +28,12 @@ import time
 ## Import my modules
 #from databaseGPS import dbWork 
 import sys
-sys.path.insert(0, r'C:\Users\theni\git\VSC-GitHub-Clones\Highway-Health\Highway-Health\database')
-from databaseGPS import dbWork #contains class dbWork and db functions
+
+sys.path.insert(0, r'C:\Users\surya\OneDrive\Desktop\Projects\PycharmProjects\Highway-Health\database')
+
+from databaseGPS import dbWork
+#contains class dbWork and db functions
+
 
 '''
 #this doesn't seem to work. Comment out for now
@@ -181,7 +185,7 @@ def openWeatherCall(result, columnHeaders, columnHeadersDB, conn, curse):
     ## Writes data obtained from json response to csv file - overwrites each hour
     data = writeToFile
     df = pd.DataFrame(data, columns=columnHeaders)
-    df.to_csv(path_or_buf=(folderPath + hourlyFile))
+    df.to_csv(path_or_buf=(hourlyFile))
 
 
     ## Inserts historical weather data obtained from the API into the DB every hour
@@ -192,7 +196,7 @@ def openWeatherCall(result, columnHeaders, columnHeadersDB, conn, curse):
     ## in the future can add an if statement that won't use the headers on each append
 
     dfDB = pd.DataFrame(dataDB, columns=columnHeadersDB)
-    dfDB.to_csv("OpenWeatherMaps_Historical.csv", mode='a') 
+    dfDB.to_csv("OpenWeatherMaps_Historical.csv", Index=False, mode='a')
 
     for index, series in dfDB.iterrows():
         #print("Insert into database count: " + str(z)) # test

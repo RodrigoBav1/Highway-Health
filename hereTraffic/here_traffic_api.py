@@ -110,7 +110,7 @@ def get_traffic_incident_details():
 
     # converting the data into dataframe, then saving it to a csv file
     df = pd.DataFrame(formatted_data, columns=column_headers)
-    return df.to_csv('traffic_incidents1.csv', index=False)
+    return df.to_csv('traffic_incidents.csv', index=False)
 #--------------------------------------------------------------------------------------------------------#
 
 
@@ -119,7 +119,6 @@ def get_traffic_incident_details():
 # This function returns a scheduled traffic details every hour 
 '''
 
-
 def scheduled_here_api_call():
     schedule.every().hour.do(get_traffic_incident_details)
     while True:
@@ -127,7 +126,7 @@ def scheduled_here_api_call():
         time.sleep(1)
 
 
-scheduled_here_api_call()  # making a call to here traffic call every hour
+# scheduled_here_api_call()  # making a call to here traffic call every hour
 #--------------------------------------------------------------------------------------------------------#
 
 
