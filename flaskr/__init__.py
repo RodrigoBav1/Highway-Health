@@ -1,6 +1,5 @@
 import pydeck
 import pandas
-import math
 from flask import Flask, render_template
 pandas.options.mode.chained_assignment = None
 
@@ -64,6 +63,22 @@ hexagonLayer = pydeck.Layer(
     extruded=True,
     coverage=0.3,
 )
+
+TRAFFIC_DATA = pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH)
+
+# Define HeatmapLayer
+heatmapLayer = pydeck.Layer(
+    "HeatmapLayer",
+    data=TRAFFIC_DATA,
+    radiusPixels=100,
+    opacity=0.9,
+    get_position=["GEOLOC_ORIGIN_LONGITUDE", "GEOLOC_ORIGIN_LATITUDE"],
+    aggregation=pydeck.types.String("SUM"),
+    threshold=1,
+    get_weight='CRITICALITY_DESCRIPTION == "minor" ? 1 : CRITICALITY_DESCRIPTION == "major" ? 2 : 3', #Set weight value
+    pickable=True,
+)
+
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(
     longitude=-96.7970,
@@ -84,12 +99,26 @@ view_state_graph = pydeck.ViewState(
     pitch=45,
     bearing=0)
 
+ # Set the viewport location
+view_state_heatmap = pydeck.ViewState(
+    longitude=-96.7970,
+    latitude=32.7767,
+    zoom=9,
+    min_zoom=1,
+    max_zoom=20,
+    pitch=45,
+    bearing=0)   
+
 # Render
 r = pydeck.Deck(layers=[scatterplotLayer, iconLayer], map_style='road', initial_view_state=view_state_homepage)
 r.to_html('templates/homepage.html')
 
 r = pydeck.Deck(layers=[hexagonLayer], map_style='road', initial_view_state=view_state_graph)
 r.to_html('templates/graph.html')
+
+#Uses dark map to see heatmap better
+r = pydeck.Deck(layers=[heatmapLayer], initial_view_state=view_state_heatmap)
+r.to_html('templates/heatmap.html')
 
 @app.route('/')
 def homepage():
@@ -98,6 +127,10 @@ def homepage():
 @app.route('/graph')
 def graph():
    return render_template('graph.html')
+
+@app.route('/heatmap')
+def graph():
+   return render_template('heatmap.html')
 
 
 
