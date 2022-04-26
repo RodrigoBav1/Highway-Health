@@ -30,8 +30,12 @@ import time
 #from databaseGPS import dbWork 
 
 import sys
-sys.path.insert(0, r'C:\Users\theni\git\VSC-GitHub-Clones\Highway-Health\Highway-Health\database')
-from databaseGPS import dbWork #contains class dbWork and db functions
+
+sys.path.insert(0, r'C:\Users\surya\OneDrive\Desktop\Projects\PycharmProjects\Highway-Health\database')
+
+from databaseGPS import dbWork
+#contains class dbWork and db functions
+
 
 
 #Define Global Variables

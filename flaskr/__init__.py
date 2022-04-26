@@ -2,79 +2,37 @@ import pydeck
 import pandas
 import math
 from flask import Flask, render_template
+pandas.options.mode.chained_assignment = None
+
 app = Flask(__name__)
 
-# 2014 locations of car accidents in the UK
-TexasTrafficIncidents = ('https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/traffic_incidents.csv')
+# Texas Traffic Incidents csv FILEPATH
+TEXAS_TRAFFIC_INCIDENTS_FILEPATH = "../hereTraffic/traffic_incidents.csv"
 
-# Weather URL
-WEATHER_DATA_URL = "https://raw.githubusercontent.com/RodrigoBav1/Highway-Health/main/flaskr/weather_updates.csv"
+# Texas Weather csv FILEPATH
+WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
 
 # Create specialized icon object
-def get_icon_image_id(id, date_time):
-    #Decode weather ID
-    MSD = math.floor(id/100)                     #Most Significant Digit
-    SSD = math.floor((id%100)/10)    #Middle digit
-    LSD = id%10                      #Least Significant Digit
+def create_image_data():
+    data = pandas.read_csv(WEATHER_DATA_FILEPATH)
+    data["icon_data"] = ""
+    for i in data.index:
+        icon_id = data["WEATHER_ICON"][i]
+        icon_data = {
+            "url": "http://openweathermap.org/img/wn/" + icon_id + "@2x.png",
+            "width": 100,
+            "height": 100,
+            "anchorY": 100,
+        }
+        data["icon_data"][i] = icon_data
+    return data
 
-    png_id = "02" #Cloudy icon default value
-
-    if(MSD == 2):
-       png_id = "11"
-    elif(MSD == 3):
-        png_id = "09"
-    elif(MSD == 5):
-        if(SSD == 0):
-            png_id = "10"
-        elif(SSD == 1):
-            png_id = "13"
-        elif(SSD == 2 or SSD == 3):
-            png_id = "09"
-    elif(MSD == 6):
-        png_id = "13"
-    elif(MSD == 7):
-        png_id = "50"
-    elif(MSD == 8):
-        if(LSD == 0):
-            png_id = "01"
-        elif(LSD == 1):
-            png_id = "02"
-        elif(LSD == 2):
-            png_id = "03"
-        elif(LSD == 3 or LSD == 4):
-            png_id == "04"
-
-    #Get night/day image
-    time = date_time.split(" ")
-    hour = time[1].split(":")
-
-    time_id = "d" #Day icon default value
-
-    #Night icon from 8 pm to 7 am
-    if(int(hour[0]) > 19 or int(hour[0]) < 7):
-        time_id = "n"
-
-    icon_id = png_id + time_id
-    icon_id = "02d"
-    icon_data = {
-        "url": "http://openweathermap.org/img/wn/" + icon_id + "@2x.png",
-        "width": 100,
-        "height": 100,
-        "anchorY": 100,
-    }
-    print(icon_data)
-    return icon_data
-
-# Append icon data to csv file
-data = pandas.read_csv(WEATHER_DATA_URL)
-data["icon_data"] = None
-for i in data.index:
-    data["icon_data"][i] = get_icon_image_id(data.iloc[i]["WEATHER_ID"], data.iloc[i]["DATE_TIME_CST"])
+ICON_DATA = create_image_data()
 
 # Define a layer to display on a map
 scatterplotLayer = pydeck.Layer(
     'ScatterplotLayer',
-    TexasTrafficIncidents,
+    data=pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH),
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     radius_scale=1,
@@ -87,7 +45,7 @@ scatterplotLayer = pydeck.Layer(
 # Define IconLayer
 iconLayer = pydeck.Layer(
     type="IconLayer",
-    data=data,
+    data=ICON_DATA,
     get_icon="icon_data",
     get_size=4,
     size_scale=15,
@@ -97,14 +55,14 @@ iconLayer = pydeck.Layer(
 
 hexagonLayer = pydeck.Layer(
     "HexagonLayer",
-    TexasTrafficIncidents,
+    data=pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH),
     get_position='[GEOLOC_ORIGIN_LONGITUDE, GEOLOC_ORIGIN_LATITUDE]',
     auto_highlight=True,
     elevation_scale=1,
     pickable=True,
     elevation_range=[0, 3000],
     extruded=True,
-    coverage=0.2,
+    coverage=0.3,
 )
 # Set the viewport location
 view_state_homepage = pydeck.ViewState(

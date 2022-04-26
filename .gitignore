@@ -9,6 +9,8 @@ instance/
 .coverage
 htmlcov/
 
+.vscode/
+
 hereTraffic/project_config.ini
 dist/
 build/
