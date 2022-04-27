@@ -3,13 +3,25 @@ import pandas
 from flask import Flask, render_template
 pandas.options.mode.chained_assignment = None
 
+        ## Karin import change
+from pathlib import Path #for getting relative paths to get the .csv files
+
 app = Flask(__name__)
 
+## Karin's Note: The csv filepaths DID NOT WORK until I added this.
 # Texas Traffic Incidents csv FILEPATH
-TEXAS_TRAFFIC_INCIDENTS_FILEPATH = "../hereTraffic/traffic_incidents.csv"
+## Karin added the __file__ line. This DID NOT WORK until I added this.
+newTrafficPath = Path(__file__).parent / "../hereTraffic/traffic_incidents.csv"
+        ## Karin commented out the first filepath and added the 2nd
+#TEXAS_TRAFFIC_INCIDENTS_FILEPATH = "../hereTraffic/traffic_incidents.csv"
+TEXAS_TRAFFIC_INCIDENTS_FILEPATH = newTrafficPath
 
 # Texas Weather csv FILEPATH
-WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
+        ## Karin added the __file__ line
+newWeatherPath = Path(__file__).parent / "../weather/weather_updates.csv"
+        ## Karin commented out the first filepath and added the 2nd
+#WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
+WEATHER_DATA_FILEPATH = newWeatherPath
 
 # Create specialized icon object
 def create_image_data():
@@ -111,14 +123,20 @@ view_state_heatmap = pydeck.ViewState(
 
 # Render
 r = pydeck.Deck(layers=[scatterplotLayer, iconLayer], map_style='road', initial_view_state=view_state_homepage)
-r.to_html('templates/homepage.html')
+        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
+#r.to_html('templates/homepage.html')
+r.to_html('flaskr/templates/homepage.html')
 
 r = pydeck.Deck(layers=[hexagonLayer], map_style='road', initial_view_state=view_state_graph)
-r.to_html('templates/graph.html')
+        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
+#r.to_html('templates/graph.html')
+r.to_html('flaskr/templates/graph.html')
 
 #Uses dark map to see heatmap better
 r = pydeck.Deck(layers=[heatmapLayer], initial_view_state=view_state_heatmap)
-r.to_html('templates/heatmap.html')
+        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
+#r.to_html('templates/heatmap.html')
+r.to_html('flaskr/templates/heatmap.html')
 
 @app.route('/')
 def homepage():
@@ -129,7 +147,10 @@ def graph():
    return render_template('graph.html')
 
 @app.route('/heatmap')
-def graph():
+        ## Karin renaming this function because it's the same name as the above function. 
+        # Errors are being raised because it's overwriting the previous function's result.
+#def graph():
+def heatmap(): ## Karin addition
    return render_template('heatmap.html')
 
 

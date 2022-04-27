@@ -12,13 +12,14 @@ MariaDB SQL Database or Any other SQL Server Database of your choice
 
 PIP [Optional, to install dependencies]
 
-OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
+Generate an OpenWeatherMaps Current Weather Data API key: Create an account at `https://openweathermap.org/` and select the "Get API key" button at `https://openweathermap.org/price`.
+
+Generate a HERE Traffic API v7 API key: Create an account at `https://account.here.com/sign-up`, create a project at `https://platform.here.com/management/projects`, and create an app at `https://platform.here.com/admin/apps`. 
 
 ## Server Install instructions
 
 1. Download Project.
-2. Run `pip install -r requirements.txt` to install the required dependencies.
-
+2. Run `pip install -r requirements.txt` to install the required  dependencies.
 3. To run the server, use `python /flaskr/__init__.py`
 4. Visit the server on `http://localhost:5000` or `127.0.0.1:5000`
 
@@ -35,19 +36,24 @@ OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 1. Download Project.
 2. Run ```npm install <package_name>``` to install the following dependencies: 
     1. webpack-cli@3.3.2 --save-dev
-    2. #deck.gl/core #deck.gl/layers
-3. Before running the script, change MYSQL server variables [host, user, password, database],
+    2. deck.gl/core 
+    3. deck.gl/layers
+3. Before running `initCreateDB.py` and `python datasetManip.py`, change MYSQL server variables [host, user, password],
     - Edit the script using Text Editor of your choice
 4. Commands to run:
+   * Run `python initCreateDB.py` to create the local database and table(s).
+   * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
 
 #### First time setup:
 
 * Update `project_config.ini` file with appropriate API keys, tokens, and IDs.
-* Update `openWeatherAPIcalls.py` FILEPATH in `sys.path.insert(0, r'FILEPATH\database')` in  with your local filepath
+* Update `openWeatherAPIcalls.py` FILEPATH in `sys.path.insert(0, r'FILEPATH\database')` with your local filepath.
+
 * Run `python initCreateDB.py` to create the local database and table(s).
 * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
-* Run `python openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps.
-* Run `npm start` within the source directory (development) to start the ?????
+* Run `python openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps and saving historal data to local database. 
+* Run `python here_traffic_api.py` to start daemon for hourly API calls to HERE traffic data and saving historical data to local .csv file. 
+
 
 ## Additional Requirements
 
@@ -55,16 +61,16 @@ OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 
 1. API access
    - OpenWeatherMaps for weather + geodata.
-   - Twitter for keyword and geodata trends.
-   - Here for real-time traffic data and map features.
+   - HERE for real-time traffic data and map features.
 2. Deck.gl
    - Webpack.
-   - One of the base maps (currently testing with Leaflet).
+   - One of the base maps.
+   - Layers for the map.
    - Website application to be written in Javascript with CSS for style.
 3. Data processing
-   - Via regular API calls (frequency to be determined) from all three data sources (OpenWeatherMaps, Here, and Twitter) a larger data source will be 
-  compiled and then manipulated to identify/confirm traffic or weather related concerns that can cause hazardous highways in the United States. 
-   - Data manipulation to be complete via Python (most likely and within the JavaScript used for Deck.gl listed in point 2).
+   - Via regular API calls (hourly) from two data sources (OpenWeatherMaps, HERE) a larger data source will be 
+  compiled and then manipulated to identify/confirm traffic or weather related concerns that can cause hazardous highways in the Dallas/Richardson, TX area. 
+   - Data manipulation to be completed via Python.
 4. Workspace that allows development in Python, Javascript, CSS (any others to be determined).
 5. Access to the Highway Health Github Repository required for version control.
 
@@ -73,7 +79,7 @@ OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 
 1. For the user: 
    - Hardware: Access to computer, internet
-   - Software: Access to an interet browser
+   - Software: Access to an internet browser
 2. For the developer/owner: 
    - APIs referenced in point 1 in Functional Requirements will need to be able to communicate with the code used to implement our Deck.gl map application.
 
@@ -81,10 +87,10 @@ OpenWeatherMaps Current Weather Data API key: `https://openweathermap.org/price`
 --- Nonfunctional Requirements ---
 
 1. Performance
-   - Will leave as is for now until tests are run on APIs to see what kind of performance we can expect. 
+   - API calls can be made once per hour with minimal impact.
 2. Quality
-   - Need to have: have data from all sources marked on the map based on our internal requirements (to be determined after API testing) within a certain 
-  geographic range (to be determined once feasibility is tested). Essentially: Place a dot on the map. 
+   - Need to have: have data from all sources marked on the map based on our internal requirements within a certain 
+  geographic range. Essentially: Place a dot on the map. 
    - Nice to have: Add functionality to "a dot on the map" to have things like: different colored dots based on severity, tooltips showing the issue (flooding, 
   traffic, so on), etc.
   
