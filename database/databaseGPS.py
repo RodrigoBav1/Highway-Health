@@ -72,7 +72,7 @@ class dbWork:
         createTableGPS = 'CREATE TABLE IF NOT EXISTS ' + tableGPS + """
             (GPS_ID INT NOT NULL AUTO_INCREMENT, 
             NAME VARCHAR(100) NOT NULL, 
-            TYPE VARCHAR(5) NOT NULL
+            TYPE VARCHAR(5) NOT NULL,
             LAT VARCHAR(10) NOT NULL,  
             LON VARCHAR(10) NOT NULL, 
             PRIMARY KEY (GPS_ID),

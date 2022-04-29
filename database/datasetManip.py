@@ -27,7 +27,7 @@ from databaseGPS import dbWork  # for function dbAddTable
 ## Define Global Variables
 
 ## file/folder path(s)
-file_path = "C:\\Users\\theni\\git\\VSC-GitHub-Clones\\Highway-Health\\Highway-Health\\datasets\\TxDOT_Roadway_Inventory_RICHARDSON.geojson"
+file_path = r"C:\Users\Karin\VSC-GitHub-Clones\Highway-Health\datasets\TxDOT_Roadway_Inventory_RICHARDSON.geojson"
 
 ## Database creation variables, change host/user/password if necessary
 host = 'localhost'
