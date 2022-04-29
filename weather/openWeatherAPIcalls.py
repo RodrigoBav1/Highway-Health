@@ -31,7 +31,7 @@ import time
 
 import sys
 
-sys.path.insert(0, r'C:\Users\surya\OneDrive\Desktop\Projects\PycharmProjects\Highway-Health\database')
+sys.path.insert(0, r'C:\Users\Karin\VSC-GitHub-Clones\Highway-Health\database')
 
 from databaseGPS import dbWork
 #contains class dbWork and db functions

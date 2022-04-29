@@ -20,7 +20,7 @@ Generate a HERE Traffic API v7 API key: Create an account at `https://account.he
 
 1. Download Project.
 2. Run `pip install -r requirements.txt` to install the required  dependencies.
-3. To run the server, use `python /flaskr/__init__.py`
+3. To run the server, use `python flaskr/__init__.py`
 4. Visit the server on `http://localhost:5000` or `127.0.0.1:5000`
 
 #### Sitemap
@@ -40,19 +40,17 @@ Generate a HERE Traffic API v7 API key: Create an account at `https://account.he
     3. deck.gl/layers
 3. Before running `initCreateDB.py` and `python datasetManip.py`, change MYSQL server variables [host, user, password],
     - Edit the script using Text Editor of your choice
-4. Commands to run:
-   * Run `python initCreateDB.py` to create the local database and table(s).
-   * Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
 
 #### First time setup:
 
 * Update `project_config.ini` file with appropriate API keys, tokens, and IDs.
+* Update `datasetManip.py` FILEPATH in `file_path = 'FILEPATH\TxDOT_Roadway_Inventory_RICHARDSON.geojson'` with your local filepath.
 * Update `openWeatherAPIcalls.py` FILEPATH in `sys.path.insert(0, r'FILEPATH\database')` with your local filepath.
 
-* Run `python initCreateDB.py` to create the local database and table(s).
-* Run `python datasetManip.py` to insert all .geojson data into local database (this will take some time).
-* Run `python openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps and saving historal data to local database. 
-* Run `python here_traffic_api.py` to start daemon for hourly API calls to HERE traffic data and saving historical data to local .csv file. 
+* Run `python database/initCreateDB.py` to create the local database and table(s).
+* Run `python database/datasetManip.py` to insert all .geojson data into local database.
+* Run `python weather/openWeatherAPIcalls.py` to start daemon for hourly API calls to OpenWeatherMaps and saving historal data to local database. 
+* Run `python hereTraffic/here_traffic_api.py` to start daemon for hourly API calls to HERE traffic data and saving historical data to local .csv file. 
 
 
 ## Additional Requirements
