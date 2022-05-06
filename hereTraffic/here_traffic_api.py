@@ -127,6 +127,7 @@ def scheduled_here_api_call():
 
 
 # scheduled_here_api_call()  # making a call to here traffic call every hour
+get_traffic_incident_details()
 #--------------------------------------------------------------------------------------------------------#
 
 

@@ -1,26 +1,19 @@
 import pydeck
 import pandas
 from flask import Flask, render_template
-pandas.options.mode.chained_assignment = None
-
-        ## Karin import change
 from pathlib import Path #for getting relative paths to get the .csv files
+pandas.options.mode.chained_assignment = None
 
 app = Flask(__name__)
 
-## Karin's Note: The csv filepaths DID NOT WORK until I added this.
 # Texas Traffic Incidents csv FILEPATH
-## Karin added the __file__ line. This DID NOT WORK until I added this.
 newTrafficPath = Path(__file__).parent / "../hereTraffic/traffic_incidents.csv"
-        ## Karin commented out the first filepath and added the 2nd
 #TEXAS_TRAFFIC_INCIDENTS_FILEPATH = "../hereTraffic/traffic_incidents.csv"
 TEXAS_TRAFFIC_INCIDENTS_FILEPATH = newTrafficPath
 
 # Texas Weather csv FILEPATH
-        ## Karin added the __file__ line
 newWeatherPath = Path(__file__).parent / "../weather/weather_updates.csv"
-        ## Karin commented out the first filepath and added the 2nd
-#WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
+# WEATHER_DATA_FILEPATH = "../weather/weather_updates.csv"
 WEATHER_DATA_FILEPATH = newWeatherPath
 
 # Create specialized icon object
@@ -73,15 +66,13 @@ hexagonLayer = pydeck.Layer(
     pickable=True,
     elevation_range=[0, 3000],
     extruded=True,
-    coverage=0.3,
+    coverage=0.5,
 )
-
-TRAFFIC_DATA = pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH)
 
 # Define HeatmapLayer
 heatmapLayer = pydeck.Layer(
     "HeatmapLayer",
-    data=TRAFFIC_DATA,
+    data=pandas.read_csv(TEXAS_TRAFFIC_INCIDENTS_FILEPATH),
     radiusPixels=100,
     opacity=0.9,
     get_position=["GEOLOC_ORIGIN_LONGITUDE", "GEOLOC_ORIGIN_LATITUDE"],
@@ -98,7 +89,7 @@ view_state_homepage = pydeck.ViewState(
     zoom=9,
     min_zoom=1,
     max_zoom=20,
-    pitch=45,
+    pitch=0,
     bearing=0)
 
 # Set the viewport location
@@ -118,25 +109,22 @@ view_state_heatmap = pydeck.ViewState(
     zoom=9,
     min_zoom=1,
     max_zoom=20,
-    pitch=45,
+    pitch=0,
     bearing=0)   
 
 # Render
 r = pydeck.Deck(layers=[scatterplotLayer, iconLayer], map_style='road', initial_view_state=view_state_homepage)
-        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
-#r.to_html('templates/homepage.html')
-r.to_html('flaskr/templates/homepage.html')
+r.to_html('templates/homepage.html')
+# r.to_html('flaskr/templates/homepage.html')
 
 r = pydeck.Deck(layers=[hexagonLayer], map_style='road', initial_view_state=view_state_graph)
-        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
-#r.to_html('templates/graph.html')
-r.to_html('flaskr/templates/graph.html')
+r.to_html('templates/graph.html')
+# r.to_html('flaskr/templates/graph.html')
 
 #Uses dark map to see heatmap better
 r = pydeck.Deck(layers=[heatmapLayer], initial_view_state=view_state_heatmap)
-        ## Karin adds 'flaskr/' to filepath, otherwise script cannot file the file
-#r.to_html('templates/heatmap.html')
-r.to_html('flaskr/templates/heatmap.html')
+r.to_html('templates/heatmap.html')
+# r.to_html('flaskr/templates/heatmap.html')
 
 @app.route('/')
 def homepage():
@@ -147,10 +135,7 @@ def graph():
    return render_template('graph.html')
 
 @app.route('/heatmap')
-        ## Karin renaming this function because it's the same name as the above function. 
-        # Errors are being raised because it's overwriting the previous function's result.
-#def graph():
-def heatmap(): ## Karin addition
+def heatmap():
    return render_template('heatmap.html')
 
 
