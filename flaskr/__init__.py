@@ -114,17 +114,17 @@ view_state_heatmap = pydeck.ViewState(
 
 # Render
 r = pydeck.Deck(layers=[scatterplotLayer, iconLayer], map_style='road', initial_view_state=view_state_homepage)
-r.to_html('templates/homepage.html')
-# r.to_html('flaskr/templates/homepage.html')
+# r.to_html('templates/homepage.html')
+r.to_html('flaskr/templates/homepage.html')
 
 r = pydeck.Deck(layers=[hexagonLayer], map_style='road', initial_view_state=view_state_graph)
-r.to_html('templates/graph.html')
-# r.to_html('flaskr/templates/graph.html')
+# r.to_html('templates/graph.html')
+r.to_html('flaskr/templates/graph.html')
 
 #Uses dark map to see heatmap better
 r = pydeck.Deck(layers=[heatmapLayer], initial_view_state=view_state_heatmap)
-r.to_html('templates/heatmap.html')
-# r.to_html('flaskr/templates/heatmap.html')
+# r.to_html('templates/heatmap.html')
+r.to_html('flaskr/templates/heatmap.html')
 
 @app.route('/')
 def homepage():
